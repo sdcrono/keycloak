@@ -46,6 +46,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        resourceRepository.deleteById(id);
+        return true;
     }
 }

@@ -1,5 +1,6 @@
-package com.onboard.demo;
+package com.onboard.demo.security.config;
 
+import com.onboard.demo.security.KeycloakAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
 public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private KeycloakAuthenticationProvider keycloakAuthenticationProvider;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -21,6 +25,7 @@ public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
+        auth.authenticationProvider(keycloakAuthenticationProvider);
         auth.parentAuthenticationManager(authenticationManagerBean())
                 .userDetailsService(userDetailsService);
     }
@@ -31,11 +36,23 @@ public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return super.userDetailsService();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+//                .oauth2Client()
+//                .and()
+                .authorizeRequests()
                 .antMatchers("/resources")
-                .authenticated()
-                .anyRequest().authenticated();
+                .hasAnyRole()
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Client()
+                .and()
+                .httpBasic();
     }
 }

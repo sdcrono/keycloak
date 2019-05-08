@@ -1,4 +1,4 @@
-package com.onboard.demo;
+package com.onboard.demo.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
