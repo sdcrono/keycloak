@@ -1,0 +1,7 @@
+INSERT into categories(id, name) values (1, 'M')
+INSERT into categories(id, name) values (2, 'N')
+INSERT into types(id, name) values (1, 'A')
+INSERT into types(id, name) values (2, 'B')
+INSERT into users(id, name) values (1, 'Andy')
+INSERT into users(id, name) values (2, 'Brew')
+INSERT into users(id, name) values (3, 'Cammy')

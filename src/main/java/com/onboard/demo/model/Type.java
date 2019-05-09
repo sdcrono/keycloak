@@ -6,32 +6,24 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "types")
 @Data
-public class Address {
+public class Type {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String street;
+    @NotNull
+    private String name;
 
-    private String unitNumber;
-
-    private String zipCode;
-
-    private String city;
-
-    private String state;
-
-    private String country;
-
-    @OneToOne(mappedBy = "address")
+    @OneToMany(mappedBy = "type")
     @JsonIgnore
-    private Resource resources;
+    private Set<Resource> resources;
 }

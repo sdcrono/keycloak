@@ -1,6 +1,8 @@
 package com.onboard.demo.controller;
 
+import com.onboard.demo.error.ResourceNotFoundException;
 import com.onboard.demo.model.Resource;
+import com.onboard.demo.model.request.ResourceRequest;
 import com.onboard.demo.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,7 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable("id") Long id) {
+    public ResponseEntity get(@PathVariable("id") Long id) throws ResourceNotFoundException {
         return ok(resourceService.get(id));
     }
 
@@ -44,13 +46,14 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyAuthority('administrator')")
     @Secured({"ROLE_admin"})
-    public void add(@RequestBody Resource resource) {
+    public void add(@RequestBody ResourceRequest resource) {
         resourceService.save(resource);
     }
 
     @PutMapping("/{id}")
     @Secured({"ROLE_admin"})
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody Resource resource) {
+    public ResponseEntity update(@PathVariable("id") Long id,
+            @RequestBody Resource resource) throws ResourceNotFoundException {
         resourceService.update(resource.getId(), resource);
         return noContent().build();
     }
@@ -58,7 +61,7 @@ public class ResourceController {
     @DeleteMapping("/{id}")
     @Secured({"ROLE_admin"})
     public @ResponseBody
-    ResponseEntity delete(@PathVariable("id") Long id) {
+    ResponseEntity delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
         resourceService.delete(id);
         return noContent().build();
     }

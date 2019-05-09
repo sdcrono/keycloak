@@ -1,6 +1,7 @@
 package com.onboard.demo.service;
 
 import com.onboard.demo.model.Resource;
+import com.onboard.demo.model.request.ResourceRequest;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface ResourceService {
 
     Resource get(Long id);
 
-    Resource save(Resource entity);
+    Resource save(ResourceRequest entity);
 
     Resource update(Long id, Resource entity);
 
