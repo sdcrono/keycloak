@@ -1,5 +1,7 @@
 package com.onboard.demo.controller;
 
+import com.onboard.demo.common.ResponseData;
+import com.onboard.demo.error.BadRequestException;
 import com.onboard.demo.error.ResourceNotFoundException;
 import com.onboard.demo.model.Resource;
 import com.onboard.demo.model.request.ResourceRequest;
@@ -34,7 +36,7 @@ public class ResourceController {
 //    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @Secured({"ROLE_user"})
     public ResponseEntity all() {
-        return ok(resourceService.findAll());
+        return ok(ResponseData.of(resourceService.findAll()));
     }
 
     @GetMapping("/{id}")
@@ -46,7 +48,7 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyAuthority('administrator')")
     @Secured({"ROLE_admin"})
-    public void add(@RequestBody ResourceRequest resource) {
+    public void add(@RequestBody ResourceRequest resource) throws BadRequestException {
         resourceService.save(resource);
     }
 

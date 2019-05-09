@@ -7,7 +7,8 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public class ExceptionDetail {
-    private int status;
-    private Error error;
+public class Error {
+    private String message;
+    private String details;
+    private Date timestamp;
 }

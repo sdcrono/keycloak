@@ -1,5 +1,6 @@
 package com.onboard.demo.service;
 
+import com.onboard.demo.error.BadRequestException;
 import com.onboard.demo.model.Resource;
 import com.onboard.demo.model.request.ResourceRequest;
 
@@ -13,7 +14,7 @@ public interface ResourceService {
 
     Resource get(Long id);
 
-    Resource save(ResourceRequest entity);
+    Resource save(ResourceRequest entity) throws BadRequestException;
 
     Resource update(Long id, Resource entity);
 
