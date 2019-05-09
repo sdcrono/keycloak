@@ -22,7 +22,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/resources")
+@RequestMapping("api/v1/resources")
 public class ResourceController {
 
     @Autowired
