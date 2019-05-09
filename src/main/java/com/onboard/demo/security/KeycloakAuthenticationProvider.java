@@ -18,6 +18,6 @@ public class KeycloakAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> auth) {
-        return auth.equals(OAuth2AuthenticationToken.class);
+        return auth.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

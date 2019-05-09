@@ -1,5 +1,7 @@
 package com.onboard.demo.security.config;
 
+import com.onboard.demo.security.JwtConfigurer;
+import com.onboard.demo.security.JwtParser;
 import com.onboard.demo.security.KeycloakAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-@Configuration
-@EnableWebSecurity
+//@Configuration
+//@EnableWebSecurity
 public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -21,6 +23,9 @@ public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+//    @Autowired
+//    private JwtParser jwtParser;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
@@ -44,8 +49,6 @@ public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .oauth2Client()
-//                .and()
                 .authorizeRequests()
                 .antMatchers("/resources")
                 .hasAnyRole()
@@ -53,6 +56,12 @@ public class SecurityKeyCloakConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Client()
                 .and()
-                .httpBasic();
+                .httpBasic()
+                .and()
+                .apply(securityConfigurerAdapter());
+    }
+
+    private JwtConfigurer securityConfigurerAdapter() {
+        return new JwtConfigurer(new JwtParser());
     }
 }
