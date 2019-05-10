@@ -34,14 +34,14 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
-//        ExceptionDetail errorDetails = new ExceptionDetail(
-//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                new Error("There was an unexpected problem serving your request", ex.getMessage(), new Date())
-//        );
-//        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
+        ExceptionDetail errorDetails = new ExceptionDetail(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                new Error("There was an unexpected problem serving your request", ex.getMessage(), new Date())
+        );
+        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(UnauthorizedRequestException.class)
     @ResponseStatus(UNAUTHORIZED)

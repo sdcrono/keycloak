@@ -24,11 +24,11 @@ public class Phone {
     @NotNull
     private String name;
 
-    public Phone(String name) {
-        this.name = name;
-    }
-
     @ManyToOne
     @JsonIgnore
     private Resource resource;
+
+    public Phone(String name) {
+        this.name = name;
+    }
 }

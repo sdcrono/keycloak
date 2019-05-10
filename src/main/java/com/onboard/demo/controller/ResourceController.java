@@ -42,7 +42,7 @@ public class ResourceController {
     @GetMapping("/{id}")
     @Secured({"ROLE_admin"})
     public ResponseEntity get(@PathVariable("id") Long id) throws Exception {
-        return ok(resourceService.get(id));
+        return ok(ResponseData.of(resourceService.get(id)));
     }
 
     @PostMapping
@@ -57,8 +57,7 @@ public class ResourceController {
     @Secured({"ROLE_admin"})
     public ResponseEntity update(@PathVariable("id") Long id,
             @RequestBody ResourceRequest resourceRequest) throws Exception {
-        resourceService.update(id, resourceRequest);
-        return noContent().build();
+        return ok(ResponseData.of(resourceService.update(id, resourceRequest)));
     }
 
     @DeleteMapping("/{id}")

@@ -24,11 +24,11 @@ public class Email {
     @NotNull
     private String name;
 
-    public Email(String name) {
-        this.name = name;
-    }
-
     @ManyToOne
     @JsonIgnore
     private Resource resource;
+
+    public Email(String name) {
+        this.name = name;
+    }
 }

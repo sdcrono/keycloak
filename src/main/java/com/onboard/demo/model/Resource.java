@@ -1,6 +1,7 @@
 package com.onboard.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.onboard.demo.error.ResourceNotFoundException;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +24,7 @@ import java.util.Set;
 @Entity
 @Table(name = "resources")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Resource implements AutoCloseable {
 
     @Id
