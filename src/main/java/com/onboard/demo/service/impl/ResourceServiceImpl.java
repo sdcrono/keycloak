@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -70,13 +72,9 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setActive(resourceRequest.getActive());
         resource.setCategory(category);
 
-        Optional.ofNullable(resourceRequest.getPhone()).ifPresent(phones ->
-            resource.setPhones(phones.stream().map(Phone::new).collect(Collectors.toSet()))
-        );
+        resource.setPhones(getPhones(resourceRequest));
 
-        Optional.ofNullable(resourceRequest.getEmail()).ifPresent(emails ->
-                resource.setEmails(emails.stream().map(Email::new).collect(Collectors.toSet()))
-        );
+        resource.setEmails(getEmails(resourceRequest));
 
         typeRepository.findOneByName(resourceRequest.getType()).ifPresent(resource::setType);
 
@@ -97,14 +95,8 @@ public class ResourceServiceImpl implements ResourceService {
             Optional.ofNullable(resourceRequest.getName()).ifPresent(resource::setName);
             resource.setAddress(resourceRequest.getAddress());
             resource.setActive(resourceRequest.getActive());
-
-            Optional.ofNullable(resourceRequest.getPhone()).ifPresent(phones ->
-                    resource.setPhones(phones.stream().map(Phone::new).collect(Collectors.toSet()))
-            );
-
-            Optional.ofNullable(resourceRequest.getEmail()).ifPresent(emails ->
-                    resource.setEmails(emails.stream().map(Email::new).collect(Collectors.toSet()))
-            );
+            resource.setPhones(getPhones(resourceRequest));
+            resource.setEmails(getEmails(resourceRequest));
 
             categoryRepository.findOneByName(resourceRequest.getCategory()).ifPresent(resource::setCategory);
 
@@ -120,6 +112,16 @@ public class ResourceServiceImpl implements ResourceService {
         }
     }
 
+    private Set<Email> getEmails(ResourceRequest resourceRequest) {
+        return Optional
+                .ofNullable(resourceRequest.getEmail())
+                .map(emails -> emails
+                        .stream()
+                        .map(Email::new)
+                        .collect(Collectors.toSet()))
+                .orElseGet(Collections::emptySet);
+    }
+
     @Override
     public boolean delete(Long id) throws ResourceNotFoundException {
         try {
@@ -128,5 +130,15 @@ public class ResourceServiceImpl implements ResourceService {
         } catch (Exception e) {
             throw new ResourceNotFoundException("Resource is not found", e);
         }
+    }
+
+    private Set<Phone> getPhones(ResourceRequest resourceRequest) {
+        return Optional
+                .ofNullable(resourceRequest.getPhone())
+                .map(phones -> phones
+                        .stream()
+                        .map(Phone::new)
+                        .collect(Collectors.toSet()))
+                .orElseGet(Collections::emptySet);
     }
 }

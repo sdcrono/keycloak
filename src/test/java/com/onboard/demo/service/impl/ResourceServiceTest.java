@@ -7,6 +7,8 @@ import com.onboard.demo.model.Resource;
 import com.onboard.demo.model.request.ResourceRequest;
 import com.onboard.demo.repository.CategoryRepository;
 import com.onboard.demo.repository.ResourceRepository;
+import com.onboard.demo.repository.TypeRepository;
+import com.onboard.demo.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -37,6 +39,12 @@ public class ResourceServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private TypeRepository typeRepository;
 
     @Test
     public void testFindAllWithSuccessfully() {
