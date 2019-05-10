@@ -1,6 +1,6 @@
 package com.onboard.demo.service;
 
-import com.onboard.demo.error.BadRequestException;
+import com.onboard.demo.error.ResourceNotFoundException;
 import com.onboard.demo.model.Resource;
 import com.onboard.demo.model.request.ResourceRequest;
 
@@ -8,16 +8,16 @@ import java.util.List;
 
 public interface ResourceService {
 
-    List<Resource> find(String filter);
+//    List<Resource> find(String filter);
 
     List<Resource> findAll();
 
-    Resource get(Long id);
+    Resource get(Long id) throws ResourceNotFoundException;
 
-    Resource save(ResourceRequest entity) throws BadRequestException;
+    Resource save(ResourceRequest entity) throws Exception;
 
-    Resource update(Long id, Resource entity);
+    Resource update(Long id, ResourceRequest entity) throws Exception;
 
-    boolean delete(Long id);
+    boolean delete(Long id) throws ResourceNotFoundException;
 
 }

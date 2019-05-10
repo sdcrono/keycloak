@@ -40,7 +40,8 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity get(@PathVariable("id") Long id) throws ResourceNotFoundException {
+    @Secured({"ROLE_admin"})
+    public ResponseEntity get(@PathVariable("id") Long id) throws Exception {
         return ok(resourceService.get(id));
     }
 
@@ -48,22 +49,22 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyAuthority('administrator')")
     @Secured({"ROLE_admin"})
-    public void add(@RequestBody ResourceRequest resource) throws BadRequestException {
+    public void add(@RequestBody ResourceRequest resource) throws Exception {
         resourceService.save(resource);
     }
 
     @PutMapping("/{id}")
     @Secured({"ROLE_admin"})
     public ResponseEntity update(@PathVariable("id") Long id,
-            @RequestBody Resource resource) throws ResourceNotFoundException {
-        resourceService.update(resource.getId(), resource);
+            @RequestBody ResourceRequest resourceRequest) throws Exception {
+        resourceService.update(id, resourceRequest);
         return noContent().build();
     }
 
     @DeleteMapping("/{id}")
     @Secured({"ROLE_admin"})
     public @ResponseBody
-    ResponseEntity delete(@PathVariable("id") Long id) throws ResourceNotFoundException {
+    ResponseEntity delete(@PathVariable("id") Long id) throws Exception {
         resourceService.delete(id);
         return noContent().build();
     }

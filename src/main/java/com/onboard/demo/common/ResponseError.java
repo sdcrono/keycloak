@@ -1,18 +1,18 @@
 package com.onboard.demo.common;
 
 public class ResponseError<T> extends Response {
-    private T data;
+    private T error;
 
-    private ResponseError(T data) {
+    private ResponseError(T error) {
         super(false, null, null);
-        this.data = data;
+        this.error = error;
     }
 
-    public static <T> ResponseError<T> of(T data) {
-        return new ResponseError<>(data);
+    public static <T> ResponseError<T> of(T error) {
+        return new ResponseError<>(error);
     }
 
     public T getData() {
-        return data;
+        return error;
     }
 }

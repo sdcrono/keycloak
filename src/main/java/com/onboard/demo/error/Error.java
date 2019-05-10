@@ -9,6 +9,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class Error {
     private String message;
-    private String details;
+    private String description;
     private Date timestamp;
 }

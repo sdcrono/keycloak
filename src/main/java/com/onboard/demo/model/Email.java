@@ -2,35 +2,33 @@ package com.onboard.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "addresses")
+@Table(name = "emails")
 @Data
-public class Address {
+@NoArgsConstructor
+public class Email {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String street;
+    @NotNull
+    private String name;
 
-    private String unitNumber;
+    public Email(String name) {
+        this.name = name;
+    }
 
-    private String zipCode;
-
-    private String city;
-
-    private String state;
-
-    private String country;
-
-    @OneToOne(mappedBy = "address")
+    @ManyToOne
     @JsonIgnore
-    private Resource resources;
+    private Resource resource;
 }

@@ -20,7 +20,7 @@ public class ResourceRequest {
 
     private String active;
 
-    private String phone;
+    private Set<String> phone;
 
     private Set<String> email;
 

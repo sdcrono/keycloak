@@ -3,6 +3,8 @@ package com.onboard.demo.service.impl;
 import com.onboard.demo.error.BadRequestException;
 import com.onboard.demo.error.ResourceNotFoundException;
 import com.onboard.demo.model.Category;
+import com.onboard.demo.model.Email;
+import com.onboard.demo.model.Phone;
 import com.onboard.demo.model.Resource;
 import com.onboard.demo.model.request.ResourceRequest;
 import com.onboard.demo.repository.CategoryRepository;
@@ -16,6 +18,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
@@ -32,10 +36,10 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public List<Resource> find(String filter) {
-        return resourceRepository.findAll();
-    }
+//    @Override
+//    public List<Resource> find(String filter) {
+//        return resourceRepository.findAll();
+//    }
 
     @Override
     public List<Resource> findAll() {
@@ -43,12 +47,16 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Resource get(Long id) {
-        return resourceRepository.getOne(id);
+    public Resource get(Long id) throws ResourceNotFoundException {
+        try(Resource resource = resourceRepository.getOne(id)) {
+            return resource;
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Resource is not found", e);
+        }
     }
 
     @Override
-    public Resource save(ResourceRequest resourceRequest) throws BadRequestException {
+    public Resource save(ResourceRequest resourceRequest) throws Exception {
         if (StringUtils.isEmpty(resourceRequest.getName())) {
             throw new BadRequestException("Resource name is not found");
         }
@@ -62,6 +70,14 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setActive(resourceRequest.getActive());
         resource.setCategory(category);
 
+        Optional.ofNullable(resourceRequest.getPhone()).ifPresent(phones ->
+            resource.setPhones(phones.stream().map(Phone::new).collect(Collectors.toSet()))
+        );
+
+        Optional.ofNullable(resourceRequest.getEmail()).ifPresent(emails ->
+                resource.setEmails(emails.stream().map(Email::new).collect(Collectors.toSet()))
+        );
+
         typeRepository.findOneByName(resourceRequest.getType()).ifPresent(resource::setType);
 
         userRepository.findOneByName(resourceRequest.getUser()).ifPresent(resource::setUser);
@@ -72,18 +88,45 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Resource update(Long id, Resource resource) {
+    public Resource update(Long id, ResourceRequest resourceRequest) throws Exception {
         Optional<Resource> optionalResource = resourceRepository.findById(id);
-        if (optionalResource.isPresent()) {
-            return null;
+        if (!optionalResource.isPresent()) {
+            throw new ResourceNotFoundException("Resource is not found");
+        } else {
+            Resource resource = optionalResource.get();
+            Optional.ofNullable(resourceRequest.getName()).ifPresent(resource::setName);
+            resource.setAddress(resourceRequest.getAddress());
+            resource.setActive(resourceRequest.getActive());
+
+            Optional.ofNullable(resourceRequest.getPhone()).ifPresent(phones ->
+                    resource.setPhones(phones.stream().map(Phone::new).collect(Collectors.toSet()))
+            );
+
+            Optional.ofNullable(resourceRequest.getEmail()).ifPresent(emails ->
+                    resource.setEmails(emails.stream().map(Email::new).collect(Collectors.toSet()))
+            );
+
+            categoryRepository.findOneByName(resourceRequest.getCategory()).ifPresent(resource::setCategory);
+
+            typeRepository.findOneByName(resourceRequest.getType()).ifPresent(resource::setType);
+
+            userRepository.findOneByName(resourceRequest.getUser()).ifPresent(resource::setUser);
+
+            resource.setId(id);
+
+            resourceRepository.save(resource);
+
+            return resource;
         }
-        resource.setId(id);
-        return resourceRepository.save(resource);
     }
 
     @Override
-    public boolean delete(Long id) {
-        resourceRepository.deleteById(id);
-        return true;
+    public boolean delete(Long id) throws ResourceNotFoundException {
+        try {
+            resourceRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Resource is not found", e);
+        }
     }
 }

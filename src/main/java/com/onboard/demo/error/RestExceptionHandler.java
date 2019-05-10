@@ -4,10 +4,14 @@ import com.onboard.demo.common.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -16,7 +20,7 @@ public class RestExceptionHandler {
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         ExceptionDetail errorDetails = new ExceptionDetail(
                 HttpStatus.NOT_FOUND.value(),
-                new Error(ex.getMessage(), request.getDescription(false), new Date())
+                new Error(ex.getMessage(), ex.getCause().getMessage(), new Date())
         );
         return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.NOT_FOUND);
     }
@@ -25,17 +29,27 @@ public class RestExceptionHandler {
     public ResponseEntity<?> BadRequestException(BadRequestException ex, WebRequest request) {
         ExceptionDetail errorDetails = new ExceptionDetail(
                 HttpStatus.BAD_REQUEST.value(),
-                new Error(ex.getMessage(), request.getDescription(false),  new Date())
+                new Error(ex.getMessage(), ex.getCause().getMessage(),  new Date())
         );
         return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> globalExcpetionHandler(Exception ex, WebRequest request) {
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
+//        ExceptionDetail errorDetails = new ExceptionDetail(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                new Error("There was an unexpected problem serving your request", ex.getMessage(), new Date())
+//        );
+//        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+
+    @ExceptionHandler(UnauthorizedRequestException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ResponseEntity<?> handleUnauthorizedRequestException(UnauthorizedRequestException ex) {
         ExceptionDetail errorDetails = new ExceptionDetail(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                new Error(ex.getMessage(), request.getDescription(false), new Date())
+                HttpStatus.UNAUTHORIZED.value(),
+                new Error(ex.getMessage(), ex.getCause().getMessage(),  new Date())
         );
-        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.UNAUTHORIZED);
     }
 }
