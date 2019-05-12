@@ -3,6 +3,7 @@ package com.onboard.demo.error;
 import com.onboard.demo.common.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
@@ -51,5 +52,15 @@ public class RestExceptionHandler {
                 new Error(ex.getMessage(), ex.getCause().getMessage(),  new Date())
         );
         return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(FORBIDDEN)
+    public ResponseEntity<?> handleAccessDeniedRequestException(AccessDeniedException ex) {
+        ExceptionDetail errorDetails = new ExceptionDetail(
+                HttpStatus.FORBIDDEN.value(),
+                new Error("There was a permission problem serving your request", ex.getMessage(),  new Date())
+        );
+        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.FORBIDDEN);
     }
 }

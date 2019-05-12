@@ -43,10 +43,6 @@ public class DemoApplicationTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(springSecurity()).build();
     }
 
-    @Test
-    public void contextLoads() {
-    }
-
     private String obtainAccessToken(String username, String password) throws Exception {
         Keycloak keycloak = Keycloak.getInstance(SERVER_URL, REALM, username, password, CLIENT_ID, CLIENT_SECRET);
         return keycloak.tokenManager().getAccessToken().getToken();
