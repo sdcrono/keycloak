@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +36,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Autowired
     private UserRepository userRepository;
-
-//    @Override
-//    public List<Resource> find(String filter) {
-//        return resourceRepository.findAll();
-//    }
 
     @Override
     public List<Resource> findAll() {

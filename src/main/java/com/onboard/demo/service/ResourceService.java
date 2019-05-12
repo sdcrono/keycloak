@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface ResourceService {
 
-//    List<Resource> find(String filter);
-
     List<Resource> findAll();
 
     Resource get(Long id) throws ResourceNotFoundException;

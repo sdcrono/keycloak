@@ -58,7 +58,6 @@ public class DemoApplicationTests {
     @Test
     public void testAccessWithGivenInvalidRole() throws Exception {
         String accessToken = obtainAccessToken(USER_USERNAME, USER_PASSWORD);
-        System.out.println("accessToken " + accessToken);
         mockMvc.perform(post("/api/v1/resources")
                 .header("Authorization", "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +91,6 @@ public class DemoApplicationTests {
     @Test
     public void testAccessWithGivenValidRole() throws Exception {
         String accessToken = obtainAccessToken(ADMIN_USERNAME, ADMIN_PASSWORD);
-        System.out.println("accessToken " + accessToken);
         mockMvc.perform(get("/api/v1/resources")
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk());
