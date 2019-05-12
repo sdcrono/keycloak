@@ -35,6 +35,15 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> BadRequestException(IllegalArgumentException ex, WebRequest request) {
+        ExceptionDetail errorDetails = new ExceptionDetail(
+                HttpStatus.BAD_REQUEST.value(),
+                new Error(ex.getMessage(), ex.getCause().getMessage(),  new Date())
+        );
+        return new ResponseEntity<>(ResponseError.of(errorDetails), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
         ExceptionDetail errorDetails = new ExceptionDetail(
