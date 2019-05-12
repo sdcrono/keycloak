@@ -29,7 +29,6 @@ public class ResourceController {
     private ResourceService resourceService;
 
     @GetMapping
-//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @Secured({"ROLE_user"})
     public ResponseEntity all() {
         return ok(ResponseData.of(resourceService.findAll()));
@@ -43,7 +42,6 @@ public class ResourceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAnyAuthority('administrator')")
     @Secured({"ROLE_admin"})
     public void add(@RequestBody ResourceRequest resource) throws Exception {
         resourceService.save(resource);

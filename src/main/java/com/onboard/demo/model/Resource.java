@@ -1,6 +1,5 @@
 package com.onboard.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.onboard.demo.error.ResourceNotFoundException;
 import lombok.Data;

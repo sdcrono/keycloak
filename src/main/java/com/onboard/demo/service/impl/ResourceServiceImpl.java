@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -91,6 +92,7 @@ public class ResourceServiceImpl implements ResourceService {
             resource.setActive(resourceRequest.getActive());
             resource.setPhones(getPhones(resourceRequest));
             resource.setEmails(getEmails(resourceRequest));
+            resource.setModified(Instant.now());
 
             categoryRepository.findOneByName(resourceRequest.getCategory()).ifPresent(resource::setCategory);
 
