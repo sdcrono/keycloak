@@ -19,8 +19,10 @@ import java.net.URI;
 import java.security.cert.Certificate;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -91,6 +93,33 @@ public class DemoApplicationTests {
                         " }\n" +
                         "}"))
                 .andExpect(status().isForbidden());
+        mockMvc.perform(put("/api/v1/resources/{id}", "1")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        " \"name\": \"a\",\n" +
+                        " \"user\": \"Andy\",\n" +
+                        " \"category\": \"M\",\n" +
+                        " \"type\": \"A\",\n" +
+                        " \"active\": \"true\",\n" +
+                        " \"phone\": [\n" +
+                        "  \"123123123\",\n" +
+                        "  \"435456567\"\n" +
+                        " ],\n" +
+                        " \"address\": {\n" +
+                        "  \"street\": \"A\",\n" +
+                        "  \"unitNumber\": \"B\",\n" +
+                        "  \"zipCode\": \"C\",\n" +
+                        "  \"city\": \"D\",\n" +
+                        "  \"state\": \"E\",\n" +
+                        "  \"country\": \"F\"\n" +
+                        " }\n" +
+                        "}"))
+                .andExpect(status().isForbidden());
+        mockMvc.perform(delete("/api/v1/resources/{id}", "1")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -99,6 +128,61 @@ public class DemoApplicationTests {
         mockMvc.perform(get("/api/v1/resources")
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk());
+        mockMvc.perform(post("/api/v1/resources")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        " \"name\": \"a\",\n" +
+                        " \"user\": \"Andy\",\n" +
+                        " \"category\": \"M\",\n" +
+                        " \"type\": \"A\",\n" +
+                        " \"active\": \"true\",\n" +
+                        " \"phone\": [\n" +
+                        "  \"123123123\",\n" +
+                        "  \"435456567\"\n" +
+                        " ],\n" +
+                        " \"email\": [\n" +
+                        "  \"sd@gmail.com\",\n" +
+                        "  \"cr@gmail.com\",\n" +
+                        "  \"ono@gmail.com\"\n" +
+                        " ],\n" +
+                        " \"address\": {\n" +
+                        "  \"street\": \"A\",\n" +
+                        "  \"unitNumber\": \"B\",\n" +
+                        "  \"zipCode\": \"C\",\n" +
+                        "  \"city\": \"D\",\n" +
+                        "  \"state\": \"E\",\n" +
+                        "  \"country\": \"F\"\n" +
+                        " }\n" +
+                        "}"))
+                .andExpect(status().isCreated());
+        mockMvc.perform(put("/api/v1/resources/{id}", "1")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        " \"name\": \"a\",\n" +
+                        " \"user\": \"Andy\",\n" +
+                        " \"category\": \"M\",\n" +
+                        " \"type\": \"A\",\n" +
+                        " \"active\": \"true\",\n" +
+                        " \"phone\": [\n" +
+                        "  \"123123123\",\n" +
+                        "  \"435456567\"\n" +
+                        " ],\n" +
+                        " \"address\": {\n" +
+                        "  \"street\": \"A\",\n" +
+                        "  \"unitNumber\": \"B\",\n" +
+                        "  \"zipCode\": \"C\",\n" +
+                        "  \"city\": \"D\",\n" +
+                        "  \"state\": \"E\",\n" +
+                        "  \"country\": \"F\"\n" +
+                        " }\n" +
+                        "}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/v1/resources/{id}", "1")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 
 }
