@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtParser {
 
-    private ConfigurableJWTProcessor jwtProcessor;
+    private ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
 
     @PostConstruct
     public void init() throws IOException {
@@ -41,22 +41,17 @@ public class JwtParser {
         JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS256;
         JWSKeySelector keySelector = new JWSVerificationKeySelector(expectedJWSAlg, keySource);
 
-        this.jwtProcessor = new DefaultJWTProcessor();
+        jwtProcessor = new DefaultJWTProcessor();
 
         jwtProcessor.setJWSKeySelector(keySelector);
     }
 
     public Authentication getAuthentication(String token) {
-
         SecurityContext ctx = null;
         JWTClaimsSet claimsSet = null;
         try {
             claimsSet = jwtProcessor.process(token, ctx);
-        } catch (ParseException e) {
-            throw new BadRequestException();
-        } catch (BadJOSEException e) {
-            throw new BadRequestException();
-        } catch (JOSEException e) {
+        } catch (ParseException | BadJOSEException | JOSEException e) {
             throw new BadRequestException();
         }
 
@@ -84,5 +79,14 @@ public class JwtParser {
         User principal = new User(claimsSet.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+    }
+
+    public boolean validate(String token) {
+        try {
+            jwtProcessor.process(token, null);
+            return true;
+        } catch (ParseException | BadJOSEException | JOSEException e) {
+            return false;
+        }
     }
 }

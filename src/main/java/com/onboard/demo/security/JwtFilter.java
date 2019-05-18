@@ -14,32 +14,22 @@ import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    private JwtProvider jwtProvider;
 
-    private JwtParser jwtParser;
-
-    public JwtFilter(JwtParser jwtParser) {
-        this.jwtParser = jwtParser;
+    public JwtFilter(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        String jwt = resolveToken(httpServletRequest);
-        if (StringUtils.hasText(jwt)) {
-            Authentication authentication = this.jwtParser.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtProvider.resolveToken(httpServletRequest);
+        if (jwt != null && jwtProvider.validateToken(jwt)) {
+            Authentication auth = jwtProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(servletRequest, servletResponse);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 }
 
